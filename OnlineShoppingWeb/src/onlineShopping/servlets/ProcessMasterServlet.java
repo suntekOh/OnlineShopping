@@ -3,6 +3,7 @@ package onlineShopping.servlets;
 import java.io.IOException;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,9 +13,7 @@ import javax.servlet.http.HttpSession;
 
 
 import onlineShopping.entities.Product;
-import onlineShopping.exceptions.ElectionException;
-import onlineShopping.model.CandidateManager;
-import onlineShopping.model.ElectionManager;
+import onlineShopping.exceptions.ProductManagerException;
 import onlineShopping.model.ProductManager;
 
 
@@ -45,9 +44,11 @@ public class ProcessMasterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		HttpSession session = request.getSession();			
 		String operType = request.getParameter("oper").trim();
-		String keyword = request.getParameter("keyword").trim();		
+		String keyword = request.getParameter("keyword").trim();	
+		
+		String responsePage ="";
 						
 		try {
 			
@@ -57,18 +58,21 @@ public class ProcessMasterServlet extends HttpServlet {
 				List<Product> products = pm.findAllProducts(keyword);
 				
 				request.setAttribute("products", products);
-
-
+				responsePage ="welcome.jsp";
+			}else if(operType.equals("Logout")) {
+				session.invalidate();
+				responsePage="bye.jsp";
 			}
 
+
 			
-		}catch (Exception e) {
-		
-		}finally {
-			request.getRequestDispatcher("welcome.jsp").forward(request,
-					response);			
-			
-		}
+		} catch (ProductManagerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			request.getRequestDispatcher(responsePage).forward(request,
+					response);				
+		}	
 
 		return;
 	}

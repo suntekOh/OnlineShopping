@@ -8,6 +8,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import onlineShopping.entities.Product;
+import onlineShopping.exceptions.ProductManagerException;
 
 
 public class ProductManager { 
@@ -17,7 +18,7 @@ public class ProductManager {
     }
     
 
-	public List<Product> findAllProducts(String keyword) {
+	public List<Product> findAllProducts(String keyword) throws ProductManagerException {
 
 
 		EntityManagerFactory emf = EMFSupplier.getInstance().getEMF(); 
@@ -28,7 +29,9 @@ public class ProductManager {
 			
 					TypedQuery<Product> tq = em.createNamedQuery("findAllProducts"
 							,	Product.class);
-			
+					if(keyword==null) {
+						keyword="";
+					}
 					tq.setParameter("keyword", "%"+keyword.toLowerCase()+"%");
 					
 					List<Product> products = tq.getResultList();
@@ -39,13 +42,13 @@ public class ProductManager {
 //					}
 //					
 //					System.out.println(result);
-//		
+		
 					return products;
 
 
 		} catch ( PersistenceException pe ) {
 			pe.printStackTrace();
-			return null;
+			throw new ProductManagerException("There is an unexpected error. Please try it again few minutes later.");	
 		} finally{
 			em.close();
 		}

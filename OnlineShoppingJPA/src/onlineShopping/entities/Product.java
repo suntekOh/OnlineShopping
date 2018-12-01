@@ -86,5 +86,9 @@ public class Product implements Serializable {
 	public void setPic(String pic) {
 		this.pic = pic;
 	}
+	
+	public String getImgLoc() {
+		return "images/"+pic;
+	}	
    
 }

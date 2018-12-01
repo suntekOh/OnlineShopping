@@ -11,6 +11,44 @@
 <jsp:include page="master.jsp"/>
 	<c:choose>
 		<c:when test="${products.size() > 0}">  
+		<table border=1 width="100%">		
+			<tr>
+				<th>Products List</th>
+			</tr>
+		<c:forEach items="${products}" var="item"
+			varStatus="theCount">
+				<tr>
+					<td>
+						<table width="100%">
+						<tr>
+							<td rowspan="4">
+								<img src="${item.getImgLoc()}" style='height:100px'>
+							</td>
+							<td colspan="4" width="80%">${item.getTitle()}</td>
+						</tr>
+						<tr>
+							<td colspan="4" width="80%">${item.getPrice()}</td>
+						</tr>
+						<tr>
+							<td height="30"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td height="30" ></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>		
+						</tr>
+						</table>
+					</td>
+				</tr>
+			</c:forEach>
+		</table>			
+			
 
 
 	    </c:when>
