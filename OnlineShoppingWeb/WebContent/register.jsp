@@ -11,7 +11,7 @@
 
 <fieldset>
 <p>If you don't have an account yet, complete the form below and click <b>Register</b> to create an account</p>
-<p>Members should sign in on the <a href="${pageContext.request.contextPath}/singin.jsp">log in</a> page.</p>
+<p>Members should sign in on the <a href="${pageContext.request.contextPath}/signin.jsp">log in</a> page.</p>
 <form method="post" action="${pageContext.request.contextPath}/signin">
 
 Registration form<br>
@@ -33,6 +33,8 @@ Registration form<br>
 	</tbody>
 </table>
 <input type="submit" name="oper" value="register"/> 
+
 </form>
+</fieldset>
 </body>
 </html>

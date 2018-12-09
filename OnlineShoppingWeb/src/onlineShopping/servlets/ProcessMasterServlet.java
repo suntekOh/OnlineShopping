@@ -11,11 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import onlineShopping.entities.Product;
 import onlineShopping.exceptions.ProductManagerException;
 import onlineShopping.model.ProductManager;
-
 
 /**
  * Servlet implementation class LoginServlet
@@ -23,7 +21,7 @@ import onlineShopping.model.ProductManager;
 @WebServlet("/processMaster")
 public class ProcessMasterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -38,41 +36,50 @@ public class ProcessMasterServlet extends HttpServlet {
 //			candidates = cm.getCandidates();
 //			getServletContext().setAttribute("candidates", candidates); 
 	}
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();			
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+
+		HttpSession session = request.getSession();
+		session.invalidate();
+		String responsePage = "bye.jsp";
+
+
+		request.getRequestDispatcher(responsePage).forward(request, response);
+
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		String operType = request.getParameter("oper").trim();
-		String keyword = request.getParameter("keyword").trim();	
-		
-		String responsePage ="";
-						
+		String keyword = request.getParameter("keyword").trim();
+
+		String responsePage = "";
+
 		try {
-			
-			if(operType.equals("SEARCH")) {
+
+			if (operType.equals("SEARCH")) {
 				ProductManager pm = new ProductManager();
 
-				List<Product> products = pm.findAllProducts(keyword);
-				
-				request.setAttribute("products", products);
-				responsePage ="welcome.jsp";
-			}else if(operType.equals("Logout")) {
-				session.invalidate();
-				responsePage="bye.jsp";
+				request.setAttribute("products", pm.findAllProducts2(keyword));
+				responsePage = "searchProduct.jsp";
 			}
 
-
-			
 		} catch (ProductManagerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
-			request.getRequestDispatcher(responsePage).forward(request,
-					response);				
-		}	
+			request.setAttribute("message", e.getMessage());
+			responsePage = "errorPage.jsp";
+		} finally {
+			request.getRequestDispatcher(responsePage).forward(request, response);
+		}
 
 		return;
 	}

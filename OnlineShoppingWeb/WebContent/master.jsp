@@ -18,7 +18,8 @@
 			<tbody
 				style="border-width: 0px; margin 0px; width: 100%; height: 100%; padding: 0px; border-collapse: collapse;">
 				<tr>
-					<td><input type="text" name="keyword"
+					<td>
+					<input type="text" name="keyword"
 						style="width: 80%; height: 25px; margin 0px; padding: 0px; border-collapse: collapse;">
 						<input type="submit" name="oper" value="SEARCH" size="20">
 					</td>
@@ -26,14 +27,27 @@
 				<tr>
 					<td align="right"><c:choose>
 							<c:when test="${sessionScope.customer != null}">
-								<font color="white">Hi, ${sessionScope.customer.getNickName()}</font>
-								<input type="submit" name="oper" value="Logout" size="20">								
+								<%-- 								<font color="white">Hi, ${sessionScope.customer.getNickName()}</font> --%>
+								<!-- 								<input type="submit" name="oper" value="Logout" size="20"> -->
+								<select name="menuList"
+									onchange="if (this.options[this.selectedIndex].value != '0') { location = this.options[this.selectedIndex].value;}">
+
+									<option value="0">Hi,
+										${sessionScope.customer.getNickName()}</option>
+									<c:forEach items="${menu}" var="item" varStatus="theCount">
+										<option
+											value="${pageContext.request.contextPath}/${item.getLocation()}">
+ 											${item.getName()}
+										</option>
+									</c:forEach>
+								</select>
 							</c:when>
 							<c:otherwise>
-								<a href="${pageContext.request.contextPath}/signin.jsp">Hello, Sign in</a>								
+								<a class="signin"
+									href="${pageContext.request.contextPath}/signin.jsp">Hello,
+									Sign in</a>
 							</c:otherwise>
-						</c:choose> 
-						<input type="submit" name="oper" value="Orders" size="20">
+						</c:choose> <input type="submit" name="oper" value="Orders" size="20">
 						<input type="submit" name="oper" value="Cart" size="20"></td>
 				</tr>
 			</tbody>

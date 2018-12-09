@@ -7,8 +7,8 @@
 </head>
 <body>
 
-<h1>Election error</h1>
+<h1>Error</h1>
 <p>The problem: <font color="red">${requestScope.message}</font></p>
-<p>Please <a href="${pageContext.request.contextPath}"><b>try again</b></a>.</p>
+<%-- <p>Please <a href="${pageContext.request.contextPath}"><b>try again</b></a>.</p> --%>
 </body>
 </html>

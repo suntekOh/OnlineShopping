@@ -1,6 +1,8 @@
 package onlineShopping.entities;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.persistence.*;
 
 /**
@@ -21,7 +23,7 @@ public class Customer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue( strategy = GenerationType.IDENTITY ) 
+	@GeneratedValue( strategy = GenerationType.IDENTITY) 
 	@Column(name = "ID")		
 	private int id;
 	
@@ -37,6 +39,7 @@ public class Customer implements Serializable {
 	@Column(name = "TYPE")			
 	private String type;
 	
+
 	public Customer() {
 		super();
 	}

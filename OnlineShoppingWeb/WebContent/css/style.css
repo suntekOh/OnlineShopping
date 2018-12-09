@@ -1,0 +1,12 @@
+.signin:link    {color:white;}
+.signin:visited {color:white;}
+.signin:hover   {color:yellow;}
+
+.detail:link    {color:black;}
+.detail:visited {color:black;}
+.detail:hover   {color:red;}
+
+input[type=text].productDetail {
+  border: 2px solid red;
+  border-radius: 4px;
+}

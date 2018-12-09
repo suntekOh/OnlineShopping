@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import onlineShopping.entities.Customer;
 import onlineShopping.entities.Product;
 import onlineShopping.exceptions.ProductManagerException;
+import onlineShopping.model.CustomerManager;
 import onlineShopping.model.EMFSupplier;
 import onlineShopping.model.ProductManager;
 
@@ -65,12 +66,11 @@ public class SignInServlet extends HttpServlet {
 
 		responsePage="";	
 		
-		TypedQuery<Customer> tq4GetCustomerByEmail = em.createNamedQuery(
-				"getCustomerByEmail", Customer.class);	
-		tq4GetCustomerByEmail.setParameter("email", email);		
-		List<Customer> customers = tq4GetCustomerByEmail.getResultList();		
-						
 		try {
+		CustomerManager cm = new CustomerManager();
+		List<Customer> customers = cm.getCustomerByEmail(email);
+						
+
 			
 			if(operType.equals("Sign in")) {
 				
@@ -81,19 +81,17 @@ public class SignInServlet extends HttpServlet {
 				
 				if(customers.size()==0) {
 					request.setAttribute("message", "There is no such user.");		
-					responsePage ="signin.jsp";			
 					throw new NumberFormatException();
 					
 				}else {
 					for(Customer i:customers) {
 						if(i.getPassword().equals(password)) {
-							responsePage="welcome.jsp";
+							responsePage="searchProduct.jsp";
 							
-
+							session.setAttribute("menu", cm.getMenuItemByType(i.getType()));							
 							session.setAttribute("customer", i);								
 						}else {
 							request.setAttribute("message", "you entered a wrong password.");		
-							responsePage ="signin.jsp";					
 							throw new NumberFormatException();							
 						}
 						break;
@@ -104,34 +102,39 @@ public class SignInServlet extends HttpServlet {
 			}else if(operType.equals("register")){
 				if(customers.size() > 0) {
 					request.setAttribute("message", "There is already a user using the same email address.");		
-					responsePage ="register.jsp";			
-					throw new NumberFormatException();	
+					throw new NullPointerException();	
 				}else {
 					String type ="C";
 					
-					EntityTransaction et = em.getTransaction();
-					et.begin();					
-					em.persist(new Customer(email, password, nickName,type));
-					et.commit();
-					
+					cm.addUser(new Customer(email, password, nickName,type));
+
 					Customer c=null;
-					for(Customer i:tq4GetCustomerByEmail.getResultList()) {
+					for(Customer i:cm.getCustomerByEmail(email)) {
 						c=i;
 						break;
 					}
-					
+				
+					session.setAttribute("menu", cm.getMenuItemByType(c.getType()));
 					session.setAttribute("customer", c);		
 					
-					responsePage="welcome.jsp";
+					responsePage="searchProduct.jsp";
 				}
 				
 			}
 
 			
 		}catch(NumberFormatException e){	
+			e.printStackTrace();				
+			responsePage ="signin.jsp";		
 			
-		}catch (PersistenceException pe ) {
-			pe.printStackTrace();
+		}catch(NullPointerException e){
+			e.printStackTrace();					
+			responsePage ="register.jsp";				
+			
+		}catch(ProductManagerException e){
+			e.printStackTrace();			
+			request.setAttribute("message", e.getMessage());
+			responsePage="errorPage.jsp";	
 		
 		}finally {
 			request.getRequestDispatcher(responsePage).forward(request,
