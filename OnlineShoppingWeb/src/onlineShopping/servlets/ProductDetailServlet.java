@@ -83,17 +83,20 @@ public class ProductDetailServlet extends HttpServlet {
 		try {
 			request.setAttribute("item", pm.findProductById2(productId));				
 			if(c==null) {
-				request.setAttribute("message", "You must sign in");	
-				throw new NumberFormatException("");			
+				throw new ArithmeticException("");			
 				}
-			
+
 			
 			if(request.getParameter("numberOfItems")==null||request.getParameter("numberOfItems").trim().length()==0) {
-				request.setAttribute("message", "You must enter quantity to checkout");				
+			
 				throw new NumberFormatException("");
 				
 			}else {
-				int quantity = Integer.parseInt(request.getParameter("numberOfItems"));		
+				int quantity = Integer.parseInt(request.getParameter("numberOfItems"));	
+				
+				if(quantity <= 0) {
+					throw new NumberFormatException("");
+				}
 				
 				if (quantity > 0) {
 					
@@ -103,13 +106,17 @@ public class ProductDetailServlet extends HttpServlet {
 				}				
 			}
 			
-		}catch(NullPointerException e) {		
+		}catch(NullPointerException e) {	
+			request.setAttribute("message", "Requested quantity is more than stock");	
 			responsePage="productDetail.jsp";
-			request.setAttribute("message", "Requested quantity is more than stock");			
 		
+		
+		}catch(ArithmeticException e) {		
+			request.setAttribute("message", "You must sign in");				
+			responsePage="productDetail.jsp";			
 			
 		}catch(NumberFormatException e) {
-
+			request.setAttribute("message", "You must enter a positive numeric value to checkout");	
 			responsePage="productDetail.jsp";
 			
 		} catch (ProductManagerException e) {

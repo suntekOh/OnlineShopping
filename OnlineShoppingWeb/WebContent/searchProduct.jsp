@@ -12,12 +12,12 @@
 <body>
 <jsp:include page="master.jsp"/>
 	<c:choose>
-		<c:when test="${products.size() > 0}">  
+		<c:when test="${requestScope.products.size() > 0}">  
 		<table border=1 width="100%">		
 			<tr>
 				<th>Products List</th>
 			</tr>
-		<c:forEach items="${products.entrySet()}" var="entry"
+		<c:forEach items="${requestScope.products.entrySet()}" var="entry"
 			varStatus="theCount">
 				<tr>
 					<td>
@@ -58,8 +58,11 @@
 
 
 	    </c:when>
+		<c:when test="${requestScope.searchYN =='Y'}">  
+			<h1>There is no product related to the Keyword.</h1>		
+		</c:when>	    
 		<c:otherwise>  
-<!-- 			<h1>There is no product related to the Keyword.</h1>		 -->
+
        </c:otherwise>
 	</c:choose>
 

@@ -86,4 +86,26 @@ public class CustomerManager {
 		
 		return c;		
 	}
+	
+	public List<MenuItem> test4getMenuItemByType(String customerType, EntityManager em) throws ProductManagerException {
+
+		try {
+			
+			TypedQuery<MenuItem> tq4GetMenuItemByType = em.createNamedQuery(
+					"getMenuItemByType", MenuItem.class);	
+			if(customerType.equals("C")) {
+				//tq4GetMenuItemByType.setParameter("customerType", customerType);		
+				tq4GetMenuItemByType.setParameter("customerType", "C");						
+			}else {
+				tq4GetMenuItemByType.setParameter("customerType", "%");				
+			}
+			return tq4GetMenuItemByType.getResultList();	
+
+		} catch ( PersistenceException pe ) {
+			pe.printStackTrace();
+			throw new ProductManagerException("There is an unexpected error. Please try it again few minutes later.");	
+		} finally{
+			
+		}
+	}		
 }

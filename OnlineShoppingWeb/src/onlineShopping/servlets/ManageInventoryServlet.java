@@ -67,6 +67,7 @@ public class ManageInventoryServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		ProductManager pm = new ProductManager();
+	
 
 		HttpSession session = request.getSession();
 		Customer c = (Customer) session.getAttribute("customer");
@@ -74,6 +75,7 @@ public class ManageInventoryServlet extends HttpServlet {
 		String responsePage = "";
 
 		try {
+			request.setAttribute("inventory", pm.getAllInventory());					
 			List<Product> products = pm.findAllProducts("");
 
 //			Enumeration<String> parameterNames = request.getParameterNames();
@@ -91,7 +93,14 @@ public class ManageInventoryServlet extends HttpServlet {
 				int quantity=0;
 				if(strValue!=null && strValue.trim().length() > 0){
 					quantity = Integer.parseInt(strValue);
+					
+					if(quantity <= 0) {
+						throw new NumberFormatException("");
+					}					
+					
 				}
+				
+
 
 				if (quantity > 0) {
 					aSet.add(new Inventory(new Date(), quantity, p,c.getId()));
@@ -116,6 +125,11 @@ public class ManageInventoryServlet extends HttpServlet {
 
 			responsePage = "done.jsp";
 			request.setAttribute("from", "manageInventory");
+		} catch (NumberFormatException e) {
+		
+			request.setAttribute("message", "You must enter a positive numeric value." );
+			responsePage = "manageInventory.jsp";			
+			
 		} catch (ProductManagerException e) {
 			e.printStackTrace();
 			responsePage = "errorPage.jsp";

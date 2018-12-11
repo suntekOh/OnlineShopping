@@ -104,6 +104,12 @@ public class SignInServlet extends HttpServlet {
 					request.setAttribute("message", "There is already a user using the same email address.");		
 					throw new NullPointerException();	
 				}else {
+					
+					if(email.equals("") || password.equals("") || nickName.equals("")) {
+						request.setAttribute("message", "you should input all fields to register.");					
+						throw new NullPointerException("");
+					}		
+					
 					String type ="C";
 					
 					cm.addUser(new Customer(email, password, nickName,type));
@@ -124,11 +130,11 @@ public class SignInServlet extends HttpServlet {
 
 			
 		}catch(NumberFormatException e){	
-			e.printStackTrace();				
+			
 			responsePage ="signin.jsp";		
 			
 		}catch(NullPointerException e){
-			e.printStackTrace();					
+				
 			responsePage ="register.jsp";				
 			
 		}catch(ProductManagerException e){

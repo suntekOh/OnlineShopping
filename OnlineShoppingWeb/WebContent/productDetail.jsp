@@ -13,7 +13,7 @@
 <jsp:include page="master.jsp"/>
 	<form action="${pageContext.request.contextPath}/productDetail"
 		method="post">
-						<c:forEach items="${item.entrySet()}" var="entry"
+						<c:forEach items="${requestScope.item.entrySet()}" var="entry"
 							varStatus="theCount">			
 		<table border=1 width="100%">		
 			<tr>

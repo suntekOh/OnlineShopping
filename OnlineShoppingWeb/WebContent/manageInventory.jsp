@@ -37,7 +37,7 @@
 				<th>Title</th>				
 			</tr>
 
-			<c:forEach items="${inventory.entrySet()}" var="entry">
+			<c:forEach items="${requestScope.inventory.entrySet()}" var="entry">
 				<tr>
 					<td align="center">${entry.getKey().getProductCode()}</td>				
 					<td align="right">

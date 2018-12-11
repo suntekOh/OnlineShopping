@@ -69,6 +69,7 @@ public class ProcessMasterServlet extends HttpServlet {
 				ProductManager pm = new ProductManager();
 
 				request.setAttribute("products", pm.findAllProducts2(keyword));
+				request.setAttribute("searchYN", "Y");
 				responsePage = "searchProduct.jsp";
 			}
 

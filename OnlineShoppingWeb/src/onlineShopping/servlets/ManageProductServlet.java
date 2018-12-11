@@ -70,7 +70,8 @@ public class ManageProductServlet extends HttpServlet {
 		String text4UniqueName = dateFormat.format(date);
 		
 	    Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-	    String fileName = text4UniqueName+"_"+filePart.getSubmittedFileName();
+	    String orgFileName = filePart.getSubmittedFileName().trim();
+	    String fileName = text4UniqueName+"_"+orgFileName;
 	    InputStream fileContent4Forever = filePart.getInputStream();
 	    
 	    //Save an image in a disk
@@ -97,8 +98,16 @@ public class ManageProductServlet extends HttpServlet {
         String productCode = request.getParameter("productCode").trim();
         String title = request.getParameter("title").trim();
         String description = request.getParameter("description").trim();
-        double price = Double.parseDouble(request.getParameter("price").trim());            
+        String strPrice = request.getParameter("price").trim();
         String pic = fileName;
+        
+		if(productCode.equals("") || title.equals("") || description.equals("") ||
+				 strPrice.equals("") || orgFileName.equals("")) {
+			request.setAttribute("message", "you should input all fields to register.");					
+			throw new NullPointerException("");
+		}	     
+		
+        double price = Double.parseDouble(request.getParameter("price").trim());   		
         
         ProductManager pm = new ProductManager();
         pm.addProduct(new Product(description, productCode, price, title, pic));
@@ -109,6 +118,14 @@ public class ManageProductServlet extends HttpServlet {
 //            // displays done.jsp page after upload finished
 //            getServletContext().getRequestDispatcher("/done.jsp").forward(
 //                    request, response);
+		}catch(NumberFormatException e) {        
+			
+			request.setAttribute("message", "You must enter the numeric value for the Price field.");
+			responsePage ="manageProduct.jsp";		
+			
+		}catch(NullPointerException e) {        
+		
+			responsePage ="manageProduct.jsp";			
 
 		}catch(ProductManagerException e) {
 			e.printStackTrace();
